@@ -5,11 +5,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class GetTextPipe implements PipeTransform {
 
-  transform(value: string): string {
-    const wordMatch: string = value && value.match(/({{\w+}})/)[0];
-    const word: string = wordMatch && wordMatch.replace('{{', '').replace('}}', '');
+  transform(text: string, word: string = ''): string {
+    const regExp: RegExp = new RegExp(word, 'gi');
+    const currentWordMatch: string[] = text && text.match(regExp);
+    const currentWord: string = currentWordMatch && currentWordMatch[0];
 
-    return value && value.replace(/({{\w+}})/g, `<span class="bold">${word}</span>`);
+    return text && text.replace(regExp, `<span class="bold">${currentWord}</span>`);
   }
 
 }
