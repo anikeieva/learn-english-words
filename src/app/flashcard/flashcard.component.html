@@ -1,0 +1,45 @@
+<mat-card class="flashcard">
+  <mat-card-header>
+    <mat-card-title>
+      <span>
+        {{flashcard.word}}
+      </span>
+      <span>
+        {{flashcard.transcription}}
+      </span>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="flashcard__content">
+    <ul class="flashcard__example">
+      <li class="flashcard__example-item"
+          *ngFor="let example of flashcard.examples; let i = index">
+        <a [href]="example.link ? example.link : ''"
+           target="_blank"
+           class="flashcard__example-img-link"
+           [ngClass]="{'not-has-link': !example.link}">
+          <img class="flashcard__example-img"
+               alt=""
+               src="{{example.image}}"
+               *ngIf="showMoreOpened || !i">
+        </a>
+        <p class="flashcard__example-text"
+           [innerHTML]="example.text | getText"
+           *ngIf="showMoreOpened"></p>
+      </li>
+    </ul>
+
+    <div class="flashcard__show-more">
+      <a class="flashcard__show-more-text"
+         *ngIf="!showMoreOpened"
+         (click)="onShowMore()">
+        Show more
+      </a>
+      <a class="flashcard__show-more-text flashcard__show-more-hide"
+         *ngIf="showMoreOpened"
+         (click)="onHide()">
+        Hide
+      </a>
+    </div>
+  </mat-card-content>
+</mat-card>
