@@ -1,0 +1,54 @@
+<div class="add-card">
+  <div class="add-card__content">
+    <form
+      class="add-card__form"
+      [formGroup]="flashCard"
+      (ngSubmit)="addCard()">
+      <mat-form-field>
+        <mat-label>Word</mat-label>
+        <label>
+          <input matInput placeholder="" formControlName="word">
+        </label>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Translation</mat-label>
+        <label>
+          <input matInput placeholder="" formControlName="translation">
+        </label>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Transcription</mat-label>
+        <label>
+          <input matInput placeholder="" formControlName="transcription">
+        </label>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Text</mat-label>
+        <label>
+          <input matInput placeholder="" formControlName="text">
+        </label>
+      </mat-form-field>
+      <label>
+        Add image
+        <input
+          type="file"
+          (change)="addImage($event)">
+      </label>
+      <mat-form-field>
+        <mat-label>Link</mat-label>
+        <label>
+          <input matInput placeholder="" formControlName="link">
+        </label>
+      </mat-form-field>
+
+      <div class="add-card__footer">
+        <button mat-raised-button type="button" (click)="closeDialog()">close</button>
+        <button mat-raised-button type="submit"
+                class="add-card__add-btn">
+          add
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+.add-card {
+  display: flex;
+  flex-direction: column;
+  &__form {
+    display: flex;
+    flex-direction: column;
+  }
+  &__footer {
+    display: flex;
+    justify-content: space-around;
+  }
+  &__add-btn {
+    background-color: #034504b8;
+    color: white;
+  }
+}

@@ -3,7 +3,7 @@ import {Flashcard} from '../models/Flashcard';
 export const flashcards: Flashcard[] = [
   {
     word: 'amid',
-    translate: 'посеред',
+    translation: 'посеред',
     transcription: '[əˈmid]',
     examples: [
       {
@@ -18,7 +18,7 @@ export const flashcards: Flashcard[] = [
   },
   {
     word: 'savory',
-    translate: 'пікантний',
+    translation: 'пікантний',
     transcription: '[ˈsāv(ə)rē]',
     examples: [
       {

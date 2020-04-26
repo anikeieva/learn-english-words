@@ -6,4 +6,10 @@
       <app-flashcard [flashcard]="flashcard"></app-flashcard>
     </li>
   </ul>
+
+  <div class="add-new-card"
+       (click)="addFlashcard()">
+    <mat-icon class="add-new-card__icon">add</mat-icon>
+    <span class="add-new-card__text">new card</span>
+  </div>
 </div>

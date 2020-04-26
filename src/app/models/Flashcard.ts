@@ -1,6 +1,6 @@
 export interface Flashcard {
   word: string;
-  translate: string;
+  translation: string;
   transcription: string;
   examples: FlashcardExample[];
 }
