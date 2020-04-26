@@ -1,4 +1,5 @@
 .flashcard {
+  position: relative;
   width: 100%;
   padding: 15px 0;
   box-sizing: border-box;
@@ -6,8 +7,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  .mat-card-title {
-    text-align: center;
+  .mat-card {
+    &-title {
+      text-align: center;
+    }
+    &-content {
+      margin: 0;
+    }
+  }
+  &__flip {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    color: green;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  &__content {
+    height: 350px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   &__example {
     padding: 0;

@@ -1,45 +1,75 @@
-<mat-card class="flashcard">
-  <mat-card-header>
-    <mat-card-title>
+<mat-card
+  class="flashcard">
+  <mat-icon
+    aria-hidden="false"
+    aria-label="flip"
+    class="flashcard__flip"
+    (click)="onFlip()">
+    flip
+  </mat-icon>
+
+  <div class="flashcard__content flashcard-front"
+       *ngIf="!isCardFlipped">
+    <mat-card-header>
+      <mat-card-title>
       <span>
         {{flashcard.word}}
       </span>
-      <span>
+        <span>
         {{flashcard.transcription}}
       </span>
-    </mat-card-title>
-  </mat-card-header>
+      </mat-card-title>
+    </mat-card-header>
 
-  <mat-card-content class="flashcard__content">
-    <ul class="flashcard__example">
-      <li class="flashcard__example-item"
-          *ngFor="let example of flashcard.examples; let i = index">
-        <a [href]="example.link ? example.link : ''"
-           target="_blank"
-           class="flashcard__example-img-link"
-           [ngClass]="{'not-has-link': !example.link}">
-          <img class="flashcard__example-img"
-               alt=""
-               src="{{example.image}}"
-               *ngIf="showMoreOpened || !i">
+    <mat-card-content class="flashcard__content">
+      <ul class="flashcard__example">
+        <li class="flashcard__example-item"
+            *ngFor="let example of flashcard.examples; let i = index">
+          <a [href]="example.link ? example.link : ''"
+             target="_blank"
+             class="flashcard__example-img-link"
+             [ngClass]="{'not-has-link': !example.link}">
+            <img class="flashcard__example-img"
+                 alt=""
+                 src="{{example.image}}"
+                 *ngIf="showMoreOpened || !i">
+          </a>
+          <p class="flashcard__example-text"
+             [innerHTML]="example.text | getText"
+             *ngIf="showMoreOpened"></p>
+        </li>
+      </ul>
+
+      <div class="flashcard__show-more">
+        <a class="flashcard__show-more-text"
+           *ngIf="!showMoreOpened"
+           (click)="onShowMore()">
+          Show more
         </a>
-        <p class="flashcard__example-text"
-           [innerHTML]="example.text | getText"
-           *ngIf="showMoreOpened"></p>
-      </li>
-    </ul>
+        <a class="flashcard__show-more-text flashcard__show-more-hide"
+           *ngIf="showMoreOpened"
+           (click)="onHide()">
+          Hide
+        </a>
+      </div>
+    </mat-card-content>
+  </div>
 
-    <div class="flashcard__show-more">
-      <a class="flashcard__show-more-text"
-         *ngIf="!showMoreOpened"
-         (click)="onShowMore()">
-        Show more
-      </a>
-      <a class="flashcard__show-more-text flashcard__show-more-hide"
-         *ngIf="showMoreOpened"
-         (click)="onHide()">
-        Hide
-      </a>
-    </div>
-  </mat-card-content>
+  <div
+    class="flashcard__content flashcard-back"
+    *ngIf="isCardFlipped">
+    <mat-card-header>
+      <mat-card-title>
+      <span>
+        {{flashcard.translate}}
+      </span>
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="flashcard__content">
+      <img class="flashcard__example-img"
+           alt=""
+           src="{{flashcard.examples[0].image}}">
+    </mat-card-content>
+  </div>
 </mat-card>

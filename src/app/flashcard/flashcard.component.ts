@@ -8,6 +8,7 @@ import {Flashcard} from '../models/Flashcard';
   styleUrls: ['./flashcard.component.scss']
 })
 export class FlashcardComponent implements OnInit {
+  isCardFlipped = false;
   showMoreOpened = false;
 
   @Input() flashcard: Flashcard;
@@ -23,5 +24,9 @@ export class FlashcardComponent implements OnInit {
 
   onHide() {
     this.showMoreOpened = false;
+  }
+
+  onFlip() {
+    this.isCardFlipped = !this.isCardFlipped;
   }
 }
