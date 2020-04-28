@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material';
 import { Flashcard } from '../models/Flashcard';
 import { FlashcardsService } from '../services/flashcards.service';
 import { AddFlashcardComponent } from '../add-flashcard/add-flashcard.component';
-import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-flashcards',
@@ -12,7 +11,7 @@ import {FormGroup} from '@angular/forms';
   styleUrls: ['./flashcards.component.scss']
 })
 export class FlashcardsComponent implements OnInit {
-  flashcards: Flashcard[];
+  flashCards: Flashcard[];
 
   constructor(
     private flashcardsService: FlashcardsService,
@@ -22,16 +21,27 @@ export class FlashcardsComponent implements OnInit {
   ngOnInit() {
     this.flashcardsService.getFlashcards()
       .subscribe((flashcards: Flashcard[]) => {
-        console.log(flashcards);
-        this.flashcards = flashcards;
+        this.flashCards = flashcards;
       });
   }
 
   addFlashcard() {
-    const dialogRef = this.dialog.open(AddFlashcardComponent);
+    const lastId: number = this.flashCards ? this.flashCards.length : 0;
+    const dialogRef = this.dialog.open(AddFlashcardComponent, {
+      data: { lastId }
+    });
 
-    dialogRef.afterClosed().subscribe((flashcard: FormGroup) => {
-      console.log('The dialog was closed', flashcard);
+    dialogRef.afterClosed().subscribe((flashCard: Flashcard) => {
+      this.flashcardsService.addFlashCard(flashCard)
+        .subscribe((flashCardFromRequest: Flashcard) => {
+          if (!this.flashCards) {
+            this.flashCards = [];
+          }
+
+          this.flashCards.push(flashCardFromRequest);
+        }, (error) => {
+          console.log(error);
+        });
     });
   }
 }

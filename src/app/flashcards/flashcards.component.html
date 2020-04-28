@@ -1,8 +1,8 @@
 <div class="flashcards-section">
   <h2 class="flashcards-section__title">Flashcards</h2>
   <ul class="flashcards">
-    <li class="flashcards__item" *ngFor="let flashcard of flashcards; let i = index;"
-        [ngClass]="{'last-child': i === (flashcards.length - 1)}">
+    <li class="flashcards__item" *ngFor="let flashcard of flashCards; let i = index;"
+        [ngClass]="{'last-child': i === (flashCards.length - 1)}">
       <app-flashcard [flashcard]="flashcard"></app-flashcard>
     </li>
   </ul>

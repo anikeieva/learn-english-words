@@ -21,6 +21,7 @@
   margin: 0;
   &__item {
     list-style: none;
+    min-width: 280px;
     width: 280px;
     box-sizing: border-box;
     &:not(.last-child) {

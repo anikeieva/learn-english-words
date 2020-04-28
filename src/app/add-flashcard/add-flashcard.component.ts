@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+
+import {Flashcard, FlashcardExample} from '../models/Flashcard';
+import {AddFlashCardData} from '../models/addFlashCardData';
 
 @Component({
   selector: 'app-add-flashcard',
@@ -8,14 +11,15 @@ import { FormControl, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./add-flashcard.component.scss']
 })
 export class AddFlashcardComponent implements OnInit {
-  flashCard: FormGroup;
+  flashCardForm: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<AddFlashcardComponent>
+    public dialogRef: MatDialogRef<AddFlashcardComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: AddFlashCardData
   ) { }
 
   ngOnInit() {
-    this.flashCard = new FormGroup({
+    this.flashCardForm = new FormGroup({
       word: new FormControl('', [Validators.required]),
       translation: new FormControl('', [Validators.required]),
       transcription: new FormControl('', [Validators.required]),
@@ -25,13 +29,25 @@ export class AddFlashcardComponent implements OnInit {
     });
   }
 
-  closeDialog(flashcard?: FormGroup) {
+  closeDialog(flashcard?: Flashcard) {
     this.dialogRef.close(flashcard);
   }
 
   addCard() {
-    console.log('addCard', this.flashCard);
-    this.closeDialog(this.flashCard);
+    const flashCard: Flashcard = this.createFlashcard();
+
+    this.closeDialog(flashCard);
+  }
+
+  private createFlashcard(): Flashcard {
+    const example: FlashcardExample = new FlashcardExample(this.flashCardForm.value.text,
+      this.flashCardForm.value.image, this.flashCardForm.value.link);
+    const examples: FlashcardExample[] = [];
+
+    examples.push(example);
+
+    return new Flashcard(this.data.lastId + 1, this.flashCardForm.value.word,
+      this.flashCardForm.value.translation, this.flashCardForm.value.transcription, examples);
   }
 
   private addImage(element) {
@@ -39,7 +55,7 @@ export class AddFlashcardComponent implements OnInit {
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      this.flashCard.patchValue({image: reader.result});
+      this.flashCardForm.patchValue({image: reader.result});
     };
 
     reader.readAsDataURL(file);
