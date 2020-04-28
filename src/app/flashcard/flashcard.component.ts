@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import {Flashcard} from '../models/Flashcard';
+import { Flashcard } from '../models/Flashcard';
 
 @Component({
   selector: 'app-flashcard',

@@ -17,7 +17,7 @@
       <span>
         {{flashcard.word}}
       </span>
-          <span>
+      <span *ngIf="flashcard.transcription">
         [{{flashcard.transcription}}]
       </span>
         </mat-card-title>

@@ -1,9 +1,8 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import {Flashcard, FlashcardExample} from '../models/Flashcard';
-import {AddFlashCardData} from '../models/addFlashCardData';
+import { Flashcard, FlashcardExample } from '../models/Flashcard';
 
 @Component({
   selector: 'app-add-flashcard',
@@ -14,8 +13,7 @@ export class AddFlashcardComponent implements OnInit {
   flashCardForm: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<AddFlashcardComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AddFlashCardData
+    public dialogRef: MatDialogRef<AddFlashcardComponent>
   ) { }
 
   ngOnInit() {
@@ -46,7 +44,7 @@ export class AddFlashcardComponent implements OnInit {
 
     examples.push(example);
 
-    return new Flashcard(this.data.lastId + 1, this.flashCardForm.value.word,
+    return new Flashcard(this.flashCardForm.value.word,
       this.flashCardForm.value.translation, this.flashCardForm.value.transcription, examples);
   }
 

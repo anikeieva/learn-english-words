@@ -17,6 +17,8 @@ import { FlashcardsComponent } from './flashcards/flashcards.component';
 
 import { GetTextPipe } from './pipes/get-text.pipe';
 import { AddFlashcardComponent } from './add-flashcard/add-flashcard.component';
+import { VideosComponent } from './videos/videos.component';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { AddFlashcardComponent } from './add-flashcard/add-flashcard.component';
     FlashcardComponent,
     FlashcardsComponent,
     GetTextPipe,
-    AddFlashcardComponent
+    AddFlashcardComponent,
+    VideosComponent,
+    VideoComponent
   ],
   imports: [
     BrowserModule,

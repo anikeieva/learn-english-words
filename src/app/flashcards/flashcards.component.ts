@@ -26,10 +26,7 @@ export class FlashcardsComponent implements OnInit {
   }
 
   addFlashcard() {
-    const lastId: number = this.flashCards ? this.flashCards.length : 0;
-    const dialogRef = this.dialog.open(AddFlashcardComponent, {
-      data: { lastId }
-    });
+    const dialogRef = this.dialog.open(AddFlashcardComponent);
 
     dialogRef.afterClosed().subscribe((flashCard: Flashcard) => {
       this.flashcardsService.addFlashCard(flashCard)
@@ -39,8 +36,6 @@ export class FlashcardsComponent implements OnInit {
           }
 
           this.flashCards.push(flashCardFromRequest);
-        }, (error) => {
-          console.log(error);
         });
     });
   }
