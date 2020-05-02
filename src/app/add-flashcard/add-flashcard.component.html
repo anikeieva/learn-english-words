@@ -29,12 +29,21 @@
           <input matInput placeholder="" formControlName="text">
         </label>
       </mat-form-field>
-      <label>
-        Add image
-        <input
-          type="file"
-          (change)="addImage($event)">
-      </label>
+
+      <mat-form-field>
+        <mat-label>Image</mat-label>
+        <label>
+          <input matInput placeholder="" formControlName="image">
+        </label>
+      </mat-form-field>
+
+<!--      <label>-->
+<!--        Add image-->
+<!--        <input-->
+<!--          type="file"-->
+<!--          (change)="addImage($event)">-->
+<!--      </label>-->
+
       <mat-form-field>
         <mat-label>Link</mat-label>
         <label>

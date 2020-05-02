@@ -8,11 +8,11 @@
       "examples": [
         {
           "text": "One man lifting his hand amid several other men",
-          "image": "assets/images/one-man-lifting-his-hand-amid-several-other-men.jpg"
+          "image": "one-man-lifting-his-hand-amid-several-other-men.jpg"
         },
         {
           "text": "One open walnut amid other whole walnuts",
-          "image": "assets/images/one-open-walnut-amid-other-whole-walnuts.jpg"
+          "image": "one-open-walnut-amid-other-whole-walnuts.jpg"
         }
       ]
     },
@@ -24,12 +24,12 @@
       "examples": [
         {
           "text": "Savory Cheese Tartlets with Mixed Berries",
-          "image": "assets/images/savory-cheese-tartlets-with-mixed-berries.jpg",
+          "image": "savory-cheese-tartlets-with-mixed-berries.jpg",
           "link": "https://www.driscolls.com/recipe/savory-cheese-tartlets-with-mixed-berries"
         },
         {
           "text": "This savory breakfast bowl recipe is not only easy to make, but also versatile",
-          "image": "assets/images/savory_breakfasts.jpg",
+          "image": "savory_breakfasts.jpg",
           "link": "https://www.happyfoodstube.com/savory-breakfast-bowl/"
         }
       ]
@@ -42,7 +42,7 @@
       "examples": [
         {
           "text": "It gives you that bit more freedom to not worry about consistency or accuracy and instead concentrate on getting something written.",
-          "image": "assets/images/accuracy.png",
+          "image": "accuracy.png",
           "link": ""
         }
       ]
@@ -55,7 +55,7 @@
       "examples": [
         {
           "text": "Two days ago - and it could even have been today - a famished boy sat on dusty ground in a small village in Niger, waiting for aid to come.",
-          "image": "assets/images/starving.jpg",
+          "image": "starving.jpg",
           "link": ""
         }
       ]
@@ -68,7 +68,7 @@
       "examples": [
         {
           "text": "I had a husband once, but it didn't stick.",
-          "image": "assets/images/divorced-couple.jpg",
+          "image": "divorced-couple.jpg",
           "link": ""
         }
       ]
@@ -81,7 +81,7 @@
       "examples": [
         {
           "text": "Oh, listen, I want to invite you to my anniversary party!",
-          "image": "assets/images/anniversary.jpg",
+          "image": "anniversary.jpg",
           "link": ""
         }
       ]
@@ -94,7 +94,7 @@
       "examples": [
         {
           "text": "I whispered, mortified and afraid, but also faintly confused.",
-          "image": "assets/images/faintly.jpg",
+          "image": "faintly.jpg",
           "link": ""
         }
       ]
@@ -107,7 +107,7 @@
       "examples": [
         {
           "text": "I know you're just trying to bait me",
-          "image": "assets/images/taunt.jpg",
+          "image": "taunt.jpg",
           "link": ""
         }
       ]
@@ -120,7 +120,7 @@
       "examples": [
         {
           "text": "Hit the lights, will you? I have to get up early.",
-          "image": "assets/images/hit_the_lights.jpg",
+          "image": "hit_the_lights.jpg",
           "link": ""
         }
       ]
@@ -133,7 +133,7 @@
       "examples": [
         {
           "text": "I'm sorry, I can't swipe a credit card without a picture ID.",
-          "image": "assets/images/swipe.jpg",
+          "image": "swipe.jpg",
           "link": ""
         }
       ]
@@ -145,7 +145,7 @@
       "examples": [
         {
           "text": "Oh, now you're just mocking me!",
-          "image": "assets/images/classmate-mocking.jpg",
+          "image": "classmate-mocking.jpg",
           "link": ""
         }
       ],
@@ -158,11 +158,27 @@
       "examples": [
         {
           "text": "I can always count on you for some witty retort.",
-          "image": "assets/images/kidding.jpg",
+          "image": "kidding.jpg",
           "link": ""
         }
       ],
       "id": 12
+    },
+    {
+      "word": "food-wise",
+      "translation": "їстівне",
+      "transcription": "",
+      "examples": [
+        {
+          "text": "What do you got food-wise?",
+          "image": "food-wise.jpg",
+          "link": ""
+        }
+      ],
+      "id": 13
+    },
+    {
+      "id": 14
     }
   ]
 }

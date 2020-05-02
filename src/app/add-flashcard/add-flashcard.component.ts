@@ -21,8 +21,8 @@ export class AddFlashcardComponent implements OnInit {
       word: new FormControl('', [Validators.required]),
       translation: new FormControl('', [Validators.required]),
       transcription: new FormControl('', [Validators.required]),
-      text: new FormControl(''),
-      image: new FormControl(''),
+      text: new FormControl('', [Validators.required]),
+      image: new FormControl('', [Validators.required]),
       link: new FormControl('')
     });
   }
@@ -48,14 +48,14 @@ export class AddFlashcardComponent implements OnInit {
       this.flashCardForm.value.translation, this.flashCardForm.value.transcription, examples);
   }
 
-  private addImage(element) {
-    const file = element && element.target && element.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      this.flashCardForm.patchValue({image: reader.result});
-    };
-
-    reader.readAsDataURL(file);
-  }
+  // private addImage(element) {
+  //   const file = element && element.target && element.target.files[0];
+  //   const reader = new FileReader();
+  //
+  //   reader.onloadend = () => {
+  //     this.flashCardForm.patchValue({image: reader.result});
+  //   };
+  //
+  //   reader.readAsDataURL(file);
+  // }
 }

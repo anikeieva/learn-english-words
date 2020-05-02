@@ -33,7 +33,7 @@
                [ngClass]="{'not-has-link': !example.link}">
               <img class="flashcard__example-img"
                    alt=""
-                   src="{{example.image}}"
+                   src="assets/images/{{example.image}}"
                    *ngIf="showMoreOpened || !i">
             </a>
             <p class="flashcard__example-text"
@@ -71,7 +71,7 @@
       <mat-card-content class="flashcard__content">
         <img class="flashcard__example-img"
              alt=""
-             src="{{flashcard.examples[0].image}}">
+             src="assets/images/{{flashcard.examples[0].image}}">
       </mat-card-content>
     </div>
   </mat-card>
