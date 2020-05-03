@@ -1,0 +1,10 @@
+.subtitles-content {
+  li {
+    display: none;
+    &.active {
+      display: block;
+      font-weight: bold;
+      color: green;
+    }
+  }
+}

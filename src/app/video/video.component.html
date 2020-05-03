@@ -1,0 +1,15 @@
+<video width="800" controls>
+  <source src="assets/videos/Gilmore_Girls-5x09.mp4" type="video/mp4">
+</video>
+
+<!--<div id="currentTrackStatuses"></div>-->
+<!--<div id="subtitlesCaptions"></div>-->
+
+<div class="subtitles-content">
+  <ul>
+    <li *ngFor="let line of subtitlesTextList"
+        [ngClass]="{'active': line.active}">
+      {{ line.text }}
+    </li>
+  </ul>
+</div>
