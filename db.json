@@ -176,9 +176,26 @@
         }
       ],
       "id": 13
+    }
+  ],
+  "videos": [
+    {
+      "id": 1,
+      "videoSrc": "assets/videos/Gilmore_Girls-5x09.mp4",
+      "enSubtitlesSrc": "assets/videos/Gilmore_Girls_5-09.en.vtt",
+      "ruSubtitlesSrc": "",
+      "name": "Gilmore Girls",
+      "season": 5,
+      "episode": 9
     },
     {
-      "id": 14
+      "id": 2,
+      "videoSrc": "assets/videos/Gilmore_Girls-5x19.mp4",
+      "enSubtitlesSrc": "assets/videos/Gilmore_Girls_5x19.en.srt",
+      "ruSubtitlesSrc": "assets/videos/gilmore.girls.5x19.ru.srt",
+      "name": "Gilmore Girls",
+      "season": 5,
+      "episode": 19
     }
   ]
 }

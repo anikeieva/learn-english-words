@@ -1,1 +1,11 @@
-<app-video></app-video>
+<div>
+  <h2>Gilmore Girls (Season 5)</h2>
+
+  <p>Watch episodes</p>
+
+  <ul>
+    <li *ngFor="let video of videos">
+      <a [routerLink]="['/video', video.id]">Episode {{video.episode}}</a>
+    </li>
+  </ul>
+</div>

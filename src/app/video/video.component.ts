@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+
+import { VideoService } from '../services/video.service';
+import { Video } from '../models/video';
+import { Subtitle } from '../models/subtitle';
 
 @Component({
   selector: 'app-video',
@@ -9,252 +12,168 @@ import { Observable, throwError } from 'rxjs';
   styleUrls: ['./video.component.scss']
 })
 export class VideoComponent implements OnInit {
-  subtitlesTextList = [];
-  cueList = {};
+  video: Video;
+  subtitlesList: Subtitle[] = [];
+  secondSubtitlesList: Subtitle[] = [];
+  isVideoGet = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private videoService: VideoService,
+    private route: ActivatedRoute
+  ) { }
+
+  private static parseTimestamp(timestamp: string): number {
+    if (timestamp) {
+      const matchList: string[] = timestamp.match(/^(?:([0-9]+):)?([0-5][0-9]):([0-5][0-9](?:[.,][0-9]{0,3})?)/);
+      const radix = 10;
+      const emptyStamp = '0';
+
+      if (!matchList) {
+        throw new Error('Invalid timestamp format: ' + timestamp);
+      }
+
+      const hoursMatch: string = matchList[1] || emptyStamp;
+      const minutesMatch: string = matchList[2] || emptyStamp;
+      const secondsMatch: string = matchList[3] || emptyStamp;
+
+      const hours = parseInt(hoursMatch, radix);
+      const minutes = parseInt(minutesMatch, radix);
+      const seconds = parseFloat(secondsMatch.replace(',', '.'));
+
+      const isGetTime: boolean = !!((hours || hours === 0) && (minutes || minutes === 0) && (seconds || seconds === 0));
+
+      return isGetTime ? seconds + 60 * minutes + 60 * 60 * hours : null;
+    }
+
+    return null;
+  }
 
   ngOnInit() {
-    this.getSubtitleText()
-      .subscribe((response: string) => {
-        if (response) {
-          this.handleSubtitleText(response);
+    this.route.paramMap.pipe(
+      switchMap((params) => {
+        if (params && params.get('id')) {
+          const id = Number(params.get('id'));
+
+          return this.videoService.getVideo(id);
+        }
+      })
+    ).subscribe((video: Video) => {
+      this.video = video;
+      this.isVideoGet = true;
+
+      if (this.video) {
+        this.getSubtitle(this.video.enSubtitlesSrc);
+        this.getSubtitle(this.video.ruSubtitlesSrc, false);
+      }
+    });
+  }
+
+  private getSubtitle(subtitleSrc: string, isFirstTrack: boolean = true) {
+    this.videoService.getSubtitleText(subtitleSrc)
+      .subscribe((subtitleText: string) => {
+        if (subtitleText) {
+          this.handleSubtitleText(subtitleText, isFirstTrack);
         }
       }, (error) => {
         console.log(error);
       });
   }
 
-  private handleTrackEvents(track) {
-    const video = document.querySelector('video');
-    const statusDiv = document.querySelector('#currentTrackStatuses');
-    const subtitlesCaptionsDiv = document.querySelector('#subtitlesCaptions');
-    const tracks = video.querySelectorAll('track');
+  private handleTrackEvents(track, isFirstTrack: boolean = true) {
+    const video: HTMLMediaElement = document.querySelector('video');
+    const tracks: NodeListOf<HTMLElement> = video.querySelectorAll('track');
     console.log(tracks);
 
     video.addEventListener('loadedmetadata', () => {
-      console.log('metadata loaded');
-
       track.addEventListener('cuechange', (e) => {
         console.log(e);
-        const activeCues = e && e.target && e.target.activeCues;
-        const activeCue = activeCues[0];
+        const activeCues: TextTrackCueList = e && e.target && e.target.activeCues;
+        const activeCue: TextTrackCue = activeCues[0];
 
         if (activeCue && activeCue.text) {
-          this.subtitlesTextList.forEach((line) => {
-            if (line.text === activeCue.text) {
-              line.active = true;
-              console.log(line);
-            } else {
-              line.active = false;
-            }
-          });
+          if (isFirstTrack) {
+            this.subtitlesList.forEach((line: Subtitle, index: number) => {
+              line.active = line.text === activeCue.text;
+
+              if (this.secondSubtitlesList[index]) {
+                this.secondSubtitlesList[index].active = line.active;
+              }
+            });
+            console.log(this.subtitlesList);
+          }
         }
-        console.log(this.subtitlesTextList);
       });
-
-      // tslint:disable-next-line:prefer-for-of
-      // for (let i = 0; i < tracks.length; i++) {
-      //   const t = tracks[i].track;
-      //   if (t.mode === 'showing') {
-      //     console.log('showing');
-      //     t.addEventListener('cuechange', (e) => {
-      //       console.log(e);
-      //     });
-      //     // t.addEventListener('logCue', logCue);
-      //   }
-      // }
-      // display in a div the list of tracks and their status/mode value
-      // displayTrackStatus();
     });
-
-    // function displayTrackStatus() {
-    //   // display the status / mode value of each track.
-    //   // In red if disabled, in green if showing
-    //   for (let i = 0; i < tracks.length; i++) {
-    //     const t = tracks[i].track;
-    //     const mode = t.mode;
-    //     appendToScrollableDiv(statusDiv, 'track ' + i + ': ' + t.label
-    //       + ' ' + t.kind + ' in '
-    //       + mode + ' mode');
-    //   }
-    // }
-    // function appendToScrollableDiv(div, text) {
-    //   // we've got two scrollable divs. This function
-    //   // appends text to the div passed as a parameter
-    //   // The div is scrollable (thanks to CSS overflow:auto)
-    //   const inner = div.innerHTML;
-    //   div.innerHTML = inner + text + '<br/>';
-    //   // Make it display the last line appended
-    //   div.scrollTop = div.scrollHeight;
-    // }
-    //
-    // function clearDiv(div) {
-    //   div.innerHTML = '';
-    // }
-    //
-    // function clearSubtitlesCaptions() {
-    //   clearDiv(subtitlesCaptionsDiv);
-    // }
-    // function toggleTrack(i) {
-    //   // toggles the mode of track i, removes the cue listener
-    //   // if its mode becomes "disabled"
-    //   // adds a cue listener if its mode was "disabled"
-    //   // and becomes "hidden"
-    //   const t = tracks[i].track;
-    //   switch (t.mode) {
-    //     case 'disabled':
-    //       t.addEventListener('cuechange', logCue, false);
-    //       t.mode = 'hidden';
-    //       break;
-    //     case 'hidden':
-    //       t.mode = 'showing';
-    //       break;
-    //     case 'showing':
-    //       t.removeEventListener('cuechange', logCue, false);
-    //       t.mode = 'disabled';
-    //       break;
-    //   }
-    //   // updates the status
-    //   clearDiv(statusDiv);
-    //   displayTrackStatus();
-    //   appendToScrollableDiv(statusDiv, '<br>' + t.label + ' are now ' + t.mode);
-    // }
-    //
-    // function logCue(e) {
-    //   // callback for the cue event
-    //   console.log(e);
-    //   if (this.activeCues && this.activeCues.length) {
-    //     const t = this.activeCues[0].text; // text of current cue
-    //     appendToScrollableDiv(subtitlesCaptionsDiv, 'Active '
-    //       + this.kind + ' changed to: ' + t);
-    //   }
-    // }
   }
 
-  private parseTimestamp(s) {
-    const match = s.match(/^(?:([0-9]+):)?([0-5][0-9]):([0-5][0-9](?:[.,][0-9]{0,3})?)/);
-    if (match == null) {
-      throw new Error('Invalid timestamp format: ' + s);
+  private createSubtitlesTrack(cueList, isFirstTrack: boolean = true) {
+    if (isFirstTrack) {
+      const video: HTMLMediaElement = document.querySelector('video');
+      const label: string = isFirstTrack ? 'En' : 'Ru';
+      const language: string = isFirstTrack ? 'en' : 'ru';
+      const track = video.addTextTrack('subtitles', label, language);
+
+      track.mode = 'showing';
+
+      Object.keys(cueList).map((key: string) => {
+        const cue: VTTCue = cueList[key];
+        track.addCue(cue);
+      });
+      console.log(track);
+
+      this.handleTrackEvents(track, isFirstTrack);
     }
-    const hours = parseInt(match[1] || '0', 10);
-    const minutes = parseInt(match[2], 10);
-    const seconds = parseFloat(match[3].replace(',', '.'));
-    return seconds + 60 * minutes + 60 * 60 * hours;
   }
 
-  private getSubtitleText(): Observable<string> {
-    return this.http.get('http://localhost:4200/assets/videos/Gilmore_Girls_5-09.en.vtt', { responseType: 'text' })
-      .pipe(
-        catchError((error: Error) => {
-          console.log(error);
-          return throwError(error);
-        })
-      );
-  }
-
-  private createSubtitlesTrack() {
-    const video = document.querySelector('video');
-    const track = video.addTextTrack('subtitles', 'English', 'en');
-    track.mode = 'showing';
-    Object.keys(this.cueList).map((key: string) => {
-      const cue: VTTCue = this.cueList[key];
-      track.addCue(cue);
-    });
-    console.log(track);
-
-    this.handleTrackEvents(track);
-  }
-
-  private handleSubtitleText(content) {
-    const pattern = /^([0-9]+)$/;
-    // tslint:disable-next-line:max-line-length
-    const patternTimecode = new RegExp(/^([0-9]{2}:[0-9]{2}:[0-9]{2}[,.]{1}[0-9]{3}) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}[,.]{1}[0-9]{3})(.*)$/);
-
-    const lines = content.split(/\r?\n/);
-    let transcript = '';
+  private handleSubtitleText(subtitleText: string, isFirstTrack: boolean = true) {
     let startTime;
     let endTime;
+
+    const identifierPattern: RegExp = /^([0-9]+)$/;
+    const timeCodePattern: RegExp = /^([0-9]{2}:[0-9]{2}:[0-9]{2}[,.]{1}[0-9]{3}) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}[,.]{1}[0-9]{3})(.*)$/;
+    const lines = subtitleText.split(/\r?\n/);
+
+    const cueList = {};
+
     for (let i = 0; i < lines.length; i++) {
-      const identifier = pattern.exec(lines[i]);
+      const identifier = identifierPattern.exec(lines[i]);
       if (identifier) {
         i++;
-        const timecode = patternTimecode.exec(lines[i]);
+        const timecode = timeCodePattern.exec(lines[i]);
 
         if (timecode && identifier[0]) {
-          startTime = this.parseTimestamp(timecode[1]);
-          endTime = this.parseTimestamp(timecode[2]);
+          startTime = VideoComponent.parseTimestamp(timecode[1]);
+          endTime = VideoComponent.parseTimestamp(timecode[2]);
         }
-        // is the current line a timecode?
         if (timecode && i < lines.length) {
           i++;
-          // it can only be a text line now
           let text = lines[i];
 
-          // is the text multiline?
           while (lines[i + 1] !== '' && i < lines.length) {
             text = text + '\n' + lines[i + 1];
             i++;
           }
-          let transText = '';
-          const voices = getVoices(text);
-          if (voices.length > 0) {
-            // how many voices ?
-            // tslint:disable-next-line:prefer-for-of
-            for (let j = 0; j < voices.length; j++) {
-              transText += voices[j].voice + ': '
-                + removeHTML(voices[j].text)
-                + '<br />';
-            }
-          } else {
-            // not a voice text
-            transText = removeHTML(text) + '<br />';
+
+          if (isFirstTrack) {
+            cueList[identifier[0]] = new VTTCue(
+              startTime,
+              endTime,
+              text
+            );
           }
-          const clearedText: string = text.replace('', '');
-          // this.cueList[identifier[0]].text = text;
 
-          this.cueList[identifier[0]] = new VTTCue(
-            startTime,
-            endTime,
-            text
-          );
+          const subtitle: Subtitle = new Subtitle( startTime, endTime, text, false);
 
-          this.subtitlesTextList.push({ startTime, endTime, text, active: false });
-          transcript += transText;
+          if (isFirstTrack) {
+            this.subtitlesList.push(subtitle);
+          } else {
+            this.secondSubtitlesList.push(subtitle);
+          }
         }
       }
-      // const oTrans = document.querySelector('.subtitles-content__text');
-      // oTrans.innerHTML = transcript;
     }
 
-    console.log(this.subtitlesTextList);
-    console.log(this.cueList);
-
-    this.createSubtitlesTrack();
-
-    function getVoices(speech) {
-      const voices = [];
-      let pos = speech.indexOf('<v'); // voices are like <v Michel> ....
-      while (pos !== -1) {
-        const endVoice = speech.indexOf('>');
-        const voice = speech.substring(pos + 2, endVoice).trim();
-        const endSpeech = speech.indexOf('</v>');
-        const text = speech.substring(endVoice + 1, endSpeech);
-        voices.push({
-          voice,
-          text
-        });
-        speech = speech.substring(endSpeech + 4);
-        pos = speech.indexOf('<v');
-      }
-      return voices;
-    }
-
-    function removeHTML(text) {
-      const div = document.createElement('div');
-      div.innerHTML = text;
-      return div.textContent || div.innerText || '';
-    }
+    this.createSubtitlesTrack(cueList, isFirstTrack);
   }
 
 }
