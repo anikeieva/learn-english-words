@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {switchMap} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 
-import { VideoService } from '../services/video.service';
-import { Video } from '../models/video';
-import { Subtitle } from '../models/subtitle';
+import {VideoService} from '../services/video.service';
+import {Video} from '../models/video';
+import {Subtitle} from '../models/subtitle';
+import {Flashcard} from '../models/Flashcard';
+import {MatDialog} from '@angular/material';
+import {AddFlashcardComponent} from '../add-flashcard/add-flashcard.component';
+import {FlashcardsService} from '../services/flashcards.service';
 
 @Component({
   selector: 'app-video',
@@ -14,12 +18,15 @@ import { Subtitle } from '../models/subtitle';
 export class VideoComponent implements OnInit {
   video: Video;
   subtitlesList: Subtitle[] = [];
+  subtitlesListHtml: Subtitle[] = [];
   secondSubtitlesList: Subtitle[] = [];
   isVideoGet = false;
 
   constructor(
     private videoService: VideoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public dialog: MatDialog,
+    private flashcardsService: FlashcardsService
   ) { }
 
   private static parseTimestamp(timestamp: string): number {
@@ -162,7 +169,9 @@ export class VideoComponent implements OnInit {
             );
           }
 
-          const subtitle: Subtitle = new Subtitle( startTime, endTime, text, false);
+
+          const wordList = this.geSubtitleWordList(text);
+          const subtitle: Subtitle = new Subtitle( startTime, endTime, text, wordList, false);
 
           if (isFirstTrack) {
             this.subtitlesList.push(subtitle);
@@ -174,6 +183,28 @@ export class VideoComponent implements OnInit {
     }
 
     this.createSubtitlesTrack(cueList, isFirstTrack);
+  }
+
+  private geSubtitleWordList(text: string): string[] {
+    return text.split(' ');
+  }
+
+  addFlashcard(word: string = '') {
+    console.log('add flashcard: ', word);
+    const clearWord = word.replace('.', '');
+
+    const dialogRef = this.dialog.open(AddFlashcardComponent, {
+      data: {
+        word: clearWord
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((flashCard: Flashcard) => {
+      this.flashcardsService.addFlashCard(flashCard)
+        .subscribe((flashCardFromRequest: Flashcard) => {
+          console.log(flashCardFromRequest);
+        });
+    });
   }
 
 }

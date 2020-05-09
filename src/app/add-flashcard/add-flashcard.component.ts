@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Flashcard, FlashcardExample } from '../models/Flashcard';
@@ -13,12 +13,15 @@ export class AddFlashcardComponent implements OnInit {
   flashCardForm: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<AddFlashcardComponent>
+    public dialogRef: MatDialogRef<AddFlashcardComponent>,
+    @Inject(MAT_DIALOG_DATA) public data
   ) { }
 
   ngOnInit() {
+    const word: string = (this.data && this.data.word) || '';
+
     this.flashCardForm = new FormGroup({
-      word: new FormControl('', [Validators.required]),
+      word: new FormControl(word, [Validators.required]),
       translation: new FormControl('', [Validators.required]),
       transcription: new FormControl('', [Validators.required]),
       text: new FormControl('', [Validators.required]),

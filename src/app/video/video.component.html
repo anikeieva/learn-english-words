@@ -10,7 +10,10 @@
     <ul>
       <li *ngFor="let line of subtitlesList"
           [ngClass]="{'active': line.active}">
-        {{ line.text }}
+        <span class="subtitles-content__word" *ngFor="let word of line.wordList"
+              (click)="addFlashcard(word)">
+          {{word}}
+        </span>
       </li>
     </ul>
   </div>
