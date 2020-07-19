@@ -7,8 +7,8 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class BaseApiService {
-  serverBaseUrl = 'http://localhost:3000/';
-  clientBaseUrl = 'http://localhost:4200/';
+  serverBaseUrl = 'http://192.168.88.109:3000/';
+  clientBaseUrl = 'http://192.168.88.109:4200/';
 
   constructor(public http: HttpClient) { }
 
@@ -23,6 +23,15 @@ export class BaseApiService {
 
   getClient(url: string = '', params: any = {}): Observable<any> {
     return this.http.get(this.getFullUrl(url, false), params).pipe(
+      catchError((error: Error) => {
+        console.log(error);
+        return throwError(error);
+      })
+    );
+  }
+
+  post(url: string = '', params: any = {}): Observable<any> {
+    return this.http.post(this.getFullUrl(url), params).pipe(
       catchError((error: Error) => {
         console.log(error);
         return throwError(error);

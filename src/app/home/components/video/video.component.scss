@@ -1,0 +1,30 @@
+.subtitles-content {
+  margin-top: 15px;
+  li {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
+  .subtitle {
+    text-align: center;
+  }
+  .word {
+    display: inline-block;
+    margin-right: 4px;
+    &:last-child {
+      margin-right: 0;
+    }
+    &__item {
+      display: inline-block;
+      font-size: 16px;
+    }
+    &__for-translate {
+      &:hover {
+        background-color: #534d53;
+        color: white;
+        cursor: pointer;
+      }
+    }
+  }
+}

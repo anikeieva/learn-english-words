@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Video } from '../models/video';
@@ -19,9 +19,10 @@ export class VideoService extends BaseApiService {
     return this.get('videos');
   }
 
-  getVideo(id: number): Observable<Video> {
-    return this.get(`videos?id=${id}`)
-      .pipe(
+  getVideo(id: number = 1): Observable<Video> {
+      return this.get('videos', {
+        params: new HttpParams().set('id', id.toString())
+      }).pipe(
         map((videos: Video[]) => videos[0] ? videos[0] : null)
       );
   }

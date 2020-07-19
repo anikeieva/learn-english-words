@@ -178,28 +178,30 @@
       "id": 13
     },
     {
+      "word": "horrified",
+      "translation": "нажаханий",
+      "transcription": "",
+      "examples": [
+        {
+          "text": "I have to say, half the fun in being with you is the horrified looks on the waiters' faces.",
+          "image": "horrified.jpg",
+          "link": "http://192.168.88.109:4200/video/2"
+        }
+      ],
       "id": 14
     },
     {
+      "word": "tow",
+      "translation": "буксирувати",
+      "transcription": "tō",
+      "examples": [
+        {
+          "text": "Uh, what if I told you your car was being towed?",
+          "image": "towed-car.png",
+          "link": ""
+        }
+      ],
       "id": 15
-    },
-    {
-      "id": 16
-    },
-    {
-      "id": 17
-    },
-    {
-      "id": 18
-    },
-    {
-      "id": 19
-    },
-    {
-      "id": 20
-    },
-    {
-      "id": 21
     }
   ],
   "videos": [
@@ -220,6 +222,15 @@
       "name": "Gilmore Girls",
       "season": 5,
       "episode": 19
+    },
+    {
+      "id": 3,
+      "videoSrc": "assets/videos/Friends.S01E01.The.One.Where.Monica.Gets.a.Roommate.mp4",
+      "enSubtitlesSrc": "assets/videos/[SubtitleTools.com] Friends - 1x01 - The One Where Monica Gets A Roommate.en.srt",
+      "ruSubtitlesSrc": "assets/videos/Friends - 1x01 - The One Where Monica Gets A Roommate.ru.srt",
+      "name": "Friends",
+      "season": 1,
+      "episode": 1
     }
   ]
 }

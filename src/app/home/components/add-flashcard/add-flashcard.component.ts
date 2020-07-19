@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Flashcard, FlashcardExample } from '../models/Flashcard';
+import { Flashcard, FlashcardExample } from '../../../shared/models/Flashcard';
 
 @Component({
   selector: 'app-add-flashcard',
@@ -18,15 +18,23 @@ export class AddFlashcardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const word: string = (this.data && this.data.word) || '';
+    if (!this.data) {
+      this.data = {
+        word: '',
+        text: '',
+        link: ''
+      };
+    }
+
+    const {word, text, link} = this.data;
 
     this.flashCardForm = new FormGroup({
       word: new FormControl(word, [Validators.required]),
       translation: new FormControl('', [Validators.required]),
       transcription: new FormControl('', [Validators.required]),
-      text: new FormControl('', [Validators.required]),
+      text: new FormControl(text, [Validators.required]),
       image: new FormControl('', [Validators.required]),
-      link: new FormControl('')
+      link: new FormControl(link)
     });
   }
 

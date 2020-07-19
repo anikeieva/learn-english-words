@@ -1,15 +1,13 @@
 .flashcards-section {
+  position: relative;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   width: 100%;
-  min-height: 100vh;
-  padding: 15px;
-
-  background-color: #f2f2f2;
   &__title {
     text-align: center;
     color: #086600;
+    margin-bottom: 30px;
   }
 }
 

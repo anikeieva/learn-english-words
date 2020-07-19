@@ -1,0 +1,12 @@
+<div class="home">
+  <ul class="home__nav">
+    <li *ngFor="let option of menuOptions"
+        [routerLink]="[option.path]"
+        [routerLinkActive]="'active'"
+        class="home__nav-item">
+      {{option.name}}
+    </li>
+  </ul>
+
+  <router-outlet></router-outlet>
+</div>

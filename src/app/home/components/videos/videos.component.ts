@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { VideoService } from '../services/video.service';
-import { Video } from '../models/video';
-import { UnsubscribeComponent } from '../shared/components/unsubscriber/unsubscribe.component';
+import { VideoService } from '../../../shared/services/video.service';
+import { Video } from '../../../shared/models/video';
+import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
 
 @Component({
   selector: 'app-videos',

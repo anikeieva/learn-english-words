@@ -28,9 +28,42 @@ $learn-english-words-theme: mat-light-theme($learn-english-words-primary, $learn
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "src/app/shared/styles/colors";
+
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: $background;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+}
+
+h1, h2, h3, h4, p, ul, li {
+  margin: 0;
+  padding: 0;
+}
 
 .bold {
   font-weight: bold;
+}
+
+//scroll styles
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #8888884a;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f1f1f1;
 }
