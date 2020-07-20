@@ -11,6 +11,14 @@ import { AddFlashcardComponent } from '../add-flashcard/add-flashcard.component'
 import { FlashcardsService } from '../../../shared/services/flashcards.service';
 import { Subscription } from 'rxjs';
 import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
+import {
+  lineFeedRegExp,
+  parseSubtitleTimeRegExp,
+  subtitleSplittersRexExp,
+  subtitleTimeCodeRexExp,
+  textStartedWithNumberRegExp
+} from '../../../shared/data/regularExpressions';
+import {Const} from '../../../shared/data/const';
 
 @Component({
   selector: 'app-video',
@@ -20,7 +28,6 @@ import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/un
 export class VideoComponent extends UnsubscribeComponent implements OnInit {
   video: Video;
   subtitlesList: SubtitleWord[] = [];
-  subtitlesListHtml: SubtitleWord[] = [];
   secondSubtitlesList: SubtitleWord[] = [];
   isVideoGet = false;
   subscriptions: Subscription[] = [];
@@ -36,8 +43,9 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
 
   private static parseTimestamp(timestamp: string): number {
     if (timestamp) {
-      const matchList: string[] = timestamp.match(/^(?:([0-9]+):)?([0-5][0-9]):([0-5][0-9](?:[.,][0-9]{0,3})?)/);
+      const matchList: string[] = timestamp.match(parseSubtitleTimeRegExp);
       const radix = 10;
+      const timeItem = 60;
       const emptyStamp = '0';
 
       if (!matchList) {
@@ -50,11 +58,11 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
 
       const hours = parseInt(hoursMatch, radix);
       const minutes = parseInt(minutesMatch, radix);
-      const seconds = parseFloat(secondsMatch.replace(',', '.'));
+      const seconds = parseFloat(secondsMatch.replace(Const.COMMA, Const.DOT));
 
       const isGetTime: boolean = !!((hours || hours === 0) && (minutes || minutes === 0) && (seconds || seconds === 0));
 
-      return isGetTime ? seconds + 60 * minutes + 60 * 60 * hours : null;
+      return isGetTime ? seconds + timeItem * minutes + timeItem * timeItem * hours : null;
     }
 
     return null;
@@ -98,11 +106,9 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
   private handleTrackEvents(track, isFirstTrack: boolean = true) {
     const video: HTMLMediaElement = document.querySelector('video');
     const tracks: NodeListOf<HTMLElement> = video.querySelectorAll('track');
-    console.log(tracks);
 
     video.addEventListener('loadedmetadata', () => {
       track.addEventListener('cuechange', (e) => {
-        console.log(e);
         const activeCues: TextTrackCueList = e && e.target && e.target.activeCues;
         const activeCue: TextTrackCue = activeCues[0];
 
@@ -115,7 +121,6 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
                 this.secondSubtitlesList[index].active = line.active;
               }
             });
-            console.log(this.subtitlesList);
           }
         }
       });
@@ -133,9 +138,9 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
 
       Object.keys(cueList).map((key: string) => {
         const cue: VTTCue = cueList[key];
+
         track.addCue(cue);
       });
-      console.log(track);
 
       this.handleTrackEvents(track, isFirstTrack);
     }
@@ -144,73 +149,66 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
   private handleSubtitleText(subtitleText: string, isFirstTrack: boolean = true) {
     let startTime;
     let endTime;
-
-    const identifierPattern: RegExp = /^([0-9]+)$/;
-    const timeCodePattern: RegExp = /^([0-9]{2}:[0-9]{2}:[0-9]{2}[,.]{1}[0-9]{3}) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}[,.]{1}[0-9]{3})(.*)$/;
-    const lines = subtitleText.split(/\r?\n/);
-
     const cueList = {};
+    const lines = subtitleText.split(lineFeedRegExp);
 
-    for (let i = 0; i < lines.length; i++) {
-      const identifier = identifierPattern.exec(lines[i]);
-      if (identifier) {
-        i++;
-        const timeCode = timeCodePattern.exec(lines[i]);
+    lines.forEach((line, index) => {
+      const identifier = textStartedWithNumberRegExp.exec(line);
 
-        if (timeCode && identifier[0]) {
+      if (identifier && identifier[0]) {
+        index++;
+        const timeCode = subtitleTimeCodeRexExp.exec(lines[index]);
+
+        if (timeCode) {
           startTime = VideoComponent.parseTimestamp(timeCode[1]);
           endTime = VideoComponent.parseTimestamp(timeCode[2]);
-        }
-        if (timeCode && i < lines.length) {
-          i++;
-          let text = lines[i];
 
-          while (lines[i + 1] !== '' && i < lines.length) {
-            text = text + '\n' + lines[i + 1];
-            i++;
-          }
+          if (index < lines.length) {
+            index++;
+            let text = lines[index];
 
-          if (isFirstTrack) {
-            cueList[identifier[0]] = new VTTCue(
-              startTime,
-              endTime,
-              text
-            );
-          }
+            while (lines[index + 1] && index < lines.length) {
+              text = text + Const.LINE_FEED + lines[index + 1];
+              index++;
+            }
 
+            const wordList: Array<WordList[]> = this.geSubtitleWordLists(text);
+            const subtitle: SubtitleWord = new SubtitleWord(startTime, endTime, text, wordList, false);
 
-          const wordList: WordList[] = this.geSubtitleWordLists(text);
-          const subtitle: SubtitleWord = new SubtitleWord( startTime, endTime, text, wordList, false);
+            if (isFirstTrack) {
+              cueList[identifier[0]] = new VTTCue(
+                startTime,
+                endTime,
+                text
+              );
 
-          if (isFirstTrack) {
-            this.subtitlesList.push(subtitle);
-          } else {
-            this.secondSubtitlesList.push(subtitle);
+              this.subtitlesList.push(subtitle);
+            } else {
+              this.secondSubtitlesList.push(subtitle);
+            }
           }
         }
       }
-    }
+    });
 
     this.createSubtitlesTrack(cueList, isFirstTrack);
   }
 
-  private geSubtitleWordLists(text: string): WordList[] {
-    const resultList: WordList[] = [];
-    const baseList: string[] = text.split(' ');
+  private geSubtitleWordLists(text: string): Array<WordList[]> {
+    const resultList: Array<WordList[]> = [];
+    const multipleLines = text.split(Const.LINE_FEED);
 
-    baseList.forEach((word: string) => {
-      if (word.includes('\n')) {
-        const wordsList: string[] = word.split('\n');
+    multipleLines.forEach(lineText => {
+      const lineList: WordList[] = [];
+      const baseList: string[] = lineText.split(Const.SPACE);
 
-        wordsList.forEach((wordItem, index) => {
-          const isNewLine = index !== wordsList.length - 1;
-          const wordList: WordList = this.geSubtitleWordList(wordItem, isNewLine);
-          resultList.push(wordList);
-        });
-      } else {
+      baseList.forEach((word: string) => {
         const wordList: WordList = this.geSubtitleWordList(word);
-        resultList.push(wordList);
-      }
+
+        lineList.push(wordList);
+      });
+
+      resultList.push(lineList);
     });
 
     return resultList;
@@ -218,9 +216,9 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
 
   private geSubtitleWordList(word: string, isNewLine: boolean = false): WordList {
     let wordForTranslate: string;
-    let restText = '';
+    let restText: string = Const.EMPTY_STRING;
 
-    if (word.match(/(’|,|\.|:|;|"|'|!|\?)/g)) {
+    if (word.match(subtitleSplittersRexExp)) {
       wordForTranslate = word.slice(0, word.length - 1);
       restText = word.slice(word.length - 1);
     } else {
@@ -231,7 +229,7 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
   }
 
   addFlashcard(word: WordList, line: SubtitleWord) {
-    const clearWord = word.wordForTranslate.replace('.', '');
+    const clearWord = word.wordForTranslate.replace(Const.DOT, Const.EMPTY_STRING);
     const imageSrc = this.getImage();
 
     this.getTranslate(word.wordForTranslate);
@@ -266,7 +264,7 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
     return canvas.toDataURL();
   }
 
-  getTranslate(word: string = '') {
+  getTranslate(word: string = Const.EMPTY_STRING) {
     this.flashcardsService.getTranslate(encodeURI(word))
       .subscribe((response) => {
         console.log(response);

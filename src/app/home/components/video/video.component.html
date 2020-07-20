@@ -5,20 +5,24 @@
 
   <div class="subtitles-content">
     <ul>
-      <li *ngFor="let line of subtitlesList"
+      <li *ngFor="let subtitle of subtitlesList"
           class="subtitle"
-          [ngClass]="{'active': line.active}">
-        <ul *ngFor="let word of line.wordList"
-            class="word"
-            [ngClass]="{'hadNextLine': word.isNewLine}">
-          <li (click)="addFlashcard(word, line)"
-              class="word__item word__for-translate">
-            {{word.wordForTranslate}}
-          </li>
-          <li *ngIf="word.restText"
-              class="word__item">
-            {{word.restText}}
-          </li>
+          [ngClass]="{'active': subtitle.active}">
+        <ul *ngFor="let subtitleItem of subtitle.wordList"
+            class="subtitle__item">
+            <li *ngFor="let wordListLine of subtitleItem"
+                class="word-list-line">
+              <ul class="word">
+                <li (click)="addFlashcard(wordListLine, subtitle)"
+                    class="word__item word__for-translate">
+                  {{wordListLine.wordForTranslate}}
+                </li>
+                <li *ngIf="wordListLine.restText"
+                    class="word__item">
+                  {{wordListLine.restText}}
+                </li>
+              </ul>
+            </li>
         </ul>
       </li>
     </ul>

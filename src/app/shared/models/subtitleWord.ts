@@ -3,7 +3,7 @@ export class SubtitleWord {
     public startTime: number,
     public endTime: number,
     public text: string,
-    public wordList: WordList[],
+    public wordList: Array<WordList[]>,
     public active: boolean
   ) {
   }
