@@ -121,27 +121,30 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
   }
 
   private handleTrackEvents(track, isFirstTrack: boolean = true) {
-    const video: HTMLMediaElement = document.querySelector('video');
-    const tracks: NodeListOf<HTMLElement> = video.querySelectorAll('track');
+    if (isFirstTrack) {
+      const video: HTMLMediaElement = document.querySelector('video');
+      const tracks: NodeListOf<HTMLElement> = video.querySelectorAll('track');
 
-    video.addEventListener('loadedmetadata', () => {
-      track.addEventListener('cuechange', (e) => {
-        const activeCues: TextTrackCueList = e && e.target && e.target.activeCues;
-        const activeCue: TextTrackCue = activeCues[0];
+      video.addEventListener('loadedmetadata', () => {
+        console.log('track: ', track);
+        track.addEventListener('cuechange', (e) => {
+          const activeCues: TextTrackCueList = e && e.target && e.target.activeCues;
+          const activeCue: TextTrackCue = activeCues[0];
 
-        if (activeCue && activeCue.text) {
-          if (isFirstTrack) {
-            this.subtitlesList.forEach((line: SubtitleWord, index: number) => {
+          this.subtitlesList.forEach((line: SubtitleWord, index: number) => {
+            if (activeCue && activeCue.text) {
               line.active = line.text === activeCue.text;
 
               if (this.secondSubtitlesList[index]) {
                 this.secondSubtitlesList[index].active = line.active;
               }
-            });
-          }
-        }
+            } else if (line.active) {
+              line.active = false;
+            }
+          });
+        });
       });
-    });
+    }
   }
 
   private createSubtitlesTrack(cueList, isFirstTrack: boolean = true) {
@@ -151,7 +154,7 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
       const language: string = isFirstTrack ? 'en' : 'ru';
       const track = video.addTextTrack('subtitles', label, language);
 
-      track.mode = 'showing';
+      track.mode = 'hidden';
 
       Object.keys(cueList).map((key: string) => {
         const cue: VTTCue = cueList[key];

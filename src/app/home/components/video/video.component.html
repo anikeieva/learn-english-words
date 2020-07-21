@@ -1,6 +1,9 @@
-<div *ngIf="isVideoGet">
-  <video width="800" controls>
-    <source src="{{video.videoSrc}}" type="video/mp4">
+<div *ngIf="isVideoGet"
+     class="video-section">
+  <video class="video-tracker"
+         controls>
+    <source src="{{video.videoSrc}}"
+            type="video/mp4">
   </video>
 
   <div class="subtitles-content">
@@ -28,12 +31,12 @@
     </ul>
   </div>
 
-  <div class="subtitles-content">
-    <ul>
-      <li *ngFor="let line of secondSubtitlesList"
-          [ngClass]="{'active': line.active}">
-        {{ line.text }}
-      </li>
-    </ul>
-  </div>
+<!--  <div class="subtitles-content">-->
+<!--    <ul>-->
+<!--      <li *ngFor="let line of secondSubtitlesList"-->
+<!--          [ngClass]="{'active': line.active}">-->
+<!--        {{ line.text }}-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
 </div>
