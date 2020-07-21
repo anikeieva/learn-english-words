@@ -41,33 +41,6 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
     super();
   }
 
-  private static parseTimestamp(timestamp: string): number {
-    if (timestamp) {
-      const matchList: string[] = timestamp.match(parseSubtitleTimeRegExp);
-      const radix = 10;
-      const timeItem = 60;
-      const emptyStamp = '0';
-
-      if (!matchList) {
-        throw new Error('Invalid timestamp format: ' + timestamp);
-      }
-
-      const hoursMatch: string = matchList[1] || emptyStamp;
-      const minutesMatch: string = matchList[2] || emptyStamp;
-      const secondsMatch: string = matchList[3] || emptyStamp;
-
-      const hours = parseInt(hoursMatch, radix);
-      const minutes = parseInt(minutesMatch, radix);
-      const seconds = parseFloat(secondsMatch.replace(Const.COMMA, Const.DOT));
-
-      const isGetTime: boolean = !!((hours || hours === 0) && (minutes || minutes === 0) && (seconds || seconds === 0));
-
-      return isGetTime ? seconds + timeItem * minutes + timeItem * timeItem * hours : null;
-    }
-
-    return null;
-  }
-
   ngOnInit() {
     this.subscriptions.push(
       this.route.paramMap.pipe(
@@ -83,14 +56,58 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
         this.isVideoGet = true;
 
         if (this.video) {
-          this.getSubtitle(this.video.enSubtitlesSrc);
-          this.getSubtitle(this.video.ruSubtitlesSrc, false);
+          this.getSubtitle(this.video.enSubtitlesSrc, true);
+          this.getSubtitle(this.video.ruSubtitlesSrc);
         }
       })
     );
   }
 
-  private getSubtitle(subtitleSrc: string, isFirstTrack: boolean = true) {
+  addFlashcard(word: WordList, line: SubtitleWord) {
+    const clearWord = word.wordForTranslate.replace(Const.DOT, Const.EMPTY_STRING);
+    const imageSrc = this.getImage();
+
+    // this.getTranslate(word.wordForTranslate);
+
+    const dialogRef = this.dialog.open(AddFlashcardComponent, {
+      data: {
+        word: clearWord,
+        text: line.text,
+        link: location.href,
+        image: imageSrc
+      }
+    });
+
+    this.subscriptions.push(
+      dialogRef.afterClosed().subscribe((flashCard: Flashcard) => {
+        if (flashCard) {
+          this.flashcardsService.addFlashCard(flashCard)
+            .subscribe((flashCardFromRequest: Flashcard) => {
+              console.log(flashCardFromRequest);
+            });
+        }
+      })
+    );
+  }
+
+  getImage() {
+    const video: CanvasImageSource = document.querySelector('video');
+    const canvas = document.createElement('canvas');
+
+    canvas.getContext('2d')
+      .drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    return canvas.toDataURL();
+  }
+
+  getTranslate(word: string = Const.EMPTY_STRING) {
+    this.flashcardsService.getTranslate(encodeURI(word))
+      .subscribe((response) => {
+        console.log(response);
+      });
+  }
+
+  private getSubtitle(subtitleSrc: string, isFirstTrack: boolean = false) {
     this.subscriptions.push(
       this.videoService.getSubtitleText(subtitleSrc)
         .subscribe((subtitleText: string) => {
@@ -147,51 +164,69 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
   }
 
   private handleSubtitleText(subtitleText: string, isFirstTrack: boolean = true) {
-    let startTime;
-    let endTime;
     const cueList = {};
     const lines = subtitleText.split(lineFeedRegExp);
 
     lines.forEach((line, index) => {
       const identifier = textStartedWithNumberRegExp.exec(line);
+      const mainStringIdentifier = identifier && identifier[0];
 
-      if (identifier && identifier[0]) {
+      if (mainStringIdentifier) {
         index++;
         const timeCode = subtitleTimeCodeRexExp.exec(lines[index]);
 
-        if (timeCode) {
-          startTime = VideoComponent.parseTimestamp(timeCode[1]);
-          endTime = VideoComponent.parseTimestamp(timeCode[2]);
+        if (timeCode && index < lines.length) {
+          index++;
+          const { startTime, endTime, text } = this.getSubtitlesInfo(timeCode, lines, index);
 
-          if (index < lines.length) {
-            index++;
-            let text = lines[index];
-
-            while (lines[index + 1] && index < lines.length) {
-              text = text + Const.LINE_FEED + lines[index + 1];
-              index++;
-            }
-
-            const wordList: Array<WordList[]> = this.geSubtitleWordLists(text);
-            const subtitle: SubtitleWord = new SubtitleWord(startTime, endTime, text, wordList, false);
-
-            if (isFirstTrack) {
-              cueList[identifier[0]] = new VTTCue(
-                startTime,
-                endTime,
-                text
-              );
-
-              this.subtitlesList.push(subtitle);
-            } else {
-              this.secondSubtitlesList.push(subtitle);
-            }
+          if (isFirstTrack) {
+            cueList[mainStringIdentifier] = new VTTCue(
+              startTime,
+              endTime,
+              text
+            );
           }
+
+          this.setSubtitlesList(text, startTime, endTime, isFirstTrack);
         }
       }
     });
 
     this.createSubtitlesTrack(cueList, isFirstTrack);
+  }
+
+  private getSubtitlesInfo(timeCode, lines, index): {startTime, endTime, text} {
+    const startTime = this.parseTimestamp(timeCode[1]);
+    const endTime = this.parseTimestamp(timeCode[2]);
+    const text = this.getSubtitleText(lines, index);
+
+    return {
+      startTime,
+      endTime,
+      text
+    };
+  }
+
+  private setSubtitlesList(text, startTime, endTime, isFirstTrack) {
+    const wordList: Array<WordList[]> = this.geSubtitleWordLists(text);
+    const subtitle: SubtitleWord = new SubtitleWord(startTime, endTime, text, wordList, false);
+
+    if (isFirstTrack) {
+      this.subtitlesList.push(subtitle);
+    } else {
+      this.secondSubtitlesList.push(subtitle);
+    }
+  }
+
+  private getSubtitleText(lines, index) {
+    let text = lines[index];
+
+    while (lines[index + 1] && index < lines.length) {
+      text = text + Const.LINE_FEED + lines[index + 1];
+      index++;
+    }
+
+    return text;
   }
 
   private geSubtitleWordLists(text: string): Array<WordList[]> {
@@ -228,46 +263,50 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
     return new WordList(word, wordForTranslate, restText, isNewLine);
   }
 
-  addFlashcard(word: WordList, line: SubtitleWord) {
-    const clearWord = word.wordForTranslate.replace(Const.DOT, Const.EMPTY_STRING);
-    const imageSrc = this.getImage();
+  private parseTimestamp(timestamp: string): number {
+    if (timestamp) {
+      const matchList: string[] = timestamp.match(parseSubtitleTimeRegExp);
+      const timeItem = 60;
 
-    this.getTranslate(word.wordForTranslate);
-
-    const dialogRef = this.dialog.open(AddFlashcardComponent, {
-      data: {
-        word: clearWord,
-        text: line.text,
-        link: location.href,
-        image: imageSrc
+      if (!matchList) {
+        throw new Error('Invalid timestamp format: ' + timestamp);
       }
-    });
 
-    this.subscriptions.push(
-      dialogRef.afterClosed().subscribe((flashCard: Flashcard) => {
-        if (flashCard) {
-          this.flashcardsService.addFlashCard(flashCard)
-            .subscribe((flashCardFromRequest: Flashcard) => {
-              console.log(flashCardFromRequest);
-            });
-        }
-      })
-    );
+      const { hours, minutes, seconds } = this.getTimeForSubtitle(matchList);
+      const isGetTime: boolean = !!((hours || hours === 0) && (minutes || minutes === 0) && (seconds || seconds === 0));
+
+      return isGetTime ? seconds + timeItem * minutes + timeItem * timeItem * hours : null;
+    }
+
+    return null;
   }
 
-  getImage() {
-    const video: CanvasImageSource = document.querySelector('video');
-    const canvas = document.createElement('canvas');
-    canvas.getContext('2d')
-      .drawImage(video, 0, 0, canvas.width, canvas.height);
+  private getTimesMatch(matchList) {
+    const emptyStamp = '0';
 
-    return canvas.toDataURL();
+    const hoursMatch: string = matchList[1] || emptyStamp;
+    const minutesMatch: string = matchList[2] || emptyStamp;
+    const secondsMatch: string = matchList[3] || emptyStamp;
+
+    return {
+      hoursMatch,
+      minutesMatch,
+      secondsMatch
+    };
   }
 
-  getTranslate(word: string = Const.EMPTY_STRING) {
-    this.flashcardsService.getTranslate(encodeURI(word))
-      .subscribe((response) => {
-        console.log(response);
-      });
+  private getTimeForSubtitle(matchList) {
+    const radix = 10;
+    const { hoursMatch, minutesMatch, secondsMatch } = this.getTimesMatch(matchList);
+
+    const hours = parseInt(hoursMatch, radix);
+    const minutes = parseInt(minutesMatch, radix);
+    const seconds = parseFloat(secondsMatch.replace(Const.COMMA, Const.DOT));
+
+    return {
+      hours,
+      minutes,
+      seconds
+    };
   }
 }
