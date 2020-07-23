@@ -3,11 +3,8 @@ import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 import { VideoService } from '../../../shared/services/video.service';
-import {Episode, Season, Video} from '../../../shared/models/video';
+import { Episode, Season, Video } from '../../../shared/models/video';
 import { SubtitleWord, WordList } from '../../../shared/models/subtitleWord';
-import { Flashcard } from '../../../shared/models/Flashcard';
-import { MatDialog } from '@angular/material';
-import { AddFlashcardComponent } from '../add-flashcard/add-flashcard.component';
 import { FlashcardsService } from '../../../shared/services/flashcards.service';
 import { Subscription } from 'rxjs';
 import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
@@ -39,7 +36,6 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
   constructor(
     private videoService: VideoService,
     private route: ActivatedRoute,
-    public dialog: MatDialog,
     private flashcardsService: FlashcardsService
   ) {
     super();
@@ -58,7 +54,6 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
           }
         })
       ).subscribe((video: Video) => {
-        console.log(video);
         // TODO: for refactoring getting particular video from server
         const season: Season = video.seasons
           .find((seasonItem: Season) => seasonItem.id === this.seasonId);
@@ -71,43 +66,6 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
         }
       })
     );
-  }
-
-  addFlashcard(word: WordList, line: SubtitleWord) {
-    const clearWord = word.wordForTranslate.replace(Const.DOT, Const.EMPTY_STRING);
-    const imageSrc = this.getImage();
-
-    // this.getTranslate(word.wordForTranslate);
-
-    const dialogRef = this.dialog.open(AddFlashcardComponent, {
-      data: {
-        word: clearWord,
-        text: line.text,
-        link: location.href,
-        image: imageSrc
-      }
-    });
-
-    this.subscriptions.push(
-      dialogRef.afterClosed().subscribe((flashCard: Flashcard) => {
-        if (flashCard) {
-          this.flashcardsService.addFlashCard(flashCard)
-            .subscribe((flashCardFromRequest: Flashcard) => {
-              console.log(flashCardFromRequest);
-            });
-        }
-      })
-    );
-  }
-
-  getImage() {
-    const video: CanvasImageSource = document.querySelector('video');
-    const canvas = document.createElement('canvas');
-
-    canvas.getContext('2d')
-      .drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    return canvas.toDataURL();
   }
 
   getTranslate(word: string = Const.EMPTY_STRING) {
@@ -136,7 +94,6 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
       const tracks: NodeListOf<HTMLElement> = video.querySelectorAll('track');
 
       video.addEventListener('loadedmetadata', () => {
-        console.log('track: ', track);
         track.addEventListener('cuechange', (e) => {
           const activeCues: TextTrackCueList = e && e.target && e.target.activeCues;
           const activeCue: TextTrackCue = activeCues[0];

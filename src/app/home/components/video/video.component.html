@@ -1,57 +1,18 @@
 <div *ngIf="isVideoGet"
-     class="video-section">
-  <video class="video-tracker"
-         controls>
-    <source src="{{video.videoSrc}}"
-            type="video/mp4">
-  </video>
+     class="video">
+  <div class="video-tracker__container">
+    <video class="video-tracker"
+           controls>
+      <source src="{{video.videoSrc}}"
+              type="video/mp4">
+    </video>
 
-  <div class="subtitles-content first-subtitles">
-    <ul>
-      <li *ngFor="let subtitle of subtitlesList"
-          class="subtitle"
-          [ngClass]="{'active': subtitle.active}">
-        <ul *ngFor="let subtitleItem of subtitle.wordList"
-            class="subtitle__item">
-            <li *ngFor="let wordListLine of subtitleItem"
-                class="word-list-line">
-              <ul class="word">
-                <li (click)="addFlashcard(wordListLine, subtitle)"
-                    class="word__item word__for-translate">
-                  {{wordListLine.wordForTranslate}}
-                </li>
-                <li *ngIf="wordListLine.restText"
-                    class="word__item">
-                  {{wordListLine.restText}}
-                </li>
-              </ul>
-            </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+    <app-subtitles [subtitlesList]="subtitlesList"
+                   [isFirstSubtitles]="true">
+    </app-subtitles>
 
-  <div class="subtitles-content second-subtitles">
-    <ul>
-      <li *ngFor="let subtitle of secondSubtitlesList"
-          class="subtitle"
-          [ngClass]="{'active': subtitle.active}">
-        <ul *ngFor="let subtitleItem of subtitle.wordList"
-            class="subtitle__item">
-          <li *ngFor="let wordListLine of subtitleItem"
-              class="word-list-line">
-            <ul class="word">
-              <li class="word__item">
-                {{wordListLine.wordForTranslate}}
-              </li>
-              <li *ngIf="wordListLine.restText"
-                  class="word__item">
-                {{wordListLine.restText}}
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <app-subtitles [subtitlesList]="secondSubtitlesList"
+                   [isFirstSubtitles]="false">
+    </app-subtitles>
   </div>
 </div>

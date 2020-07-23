@@ -1,55 +1,14 @@
-.video-section {
+.video {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   .video-tracker {
-    width: 800px;
-  }
-  .subtitles-content {
-    position: absolute;
-    width: 800px;
-    color: white;
-    &.first-subtitles {
-      top: 20px;
-      left: 0;
-    }
-    &.second-subtitles {
-      top: 360px;
-      left: 0;
-    }
-    .subtitle {
-      text-align: center;
-      display: none;
-      width: fit-content;
-      padding: 4px 4px 1px;
-      margin: 0 auto;
-      border-radius: 3px;
-      background-color: black;
-      &__item {
-        display: block;
-      }
-      &.active {
-        display: block;
-      }
-    }
-    .word-list-line {
-      display: inline-block;
-      margin-right: 4px;
-      &:last-child {
-        margin-right: 0;
-      }
-      .word {
-        display: inline-block;
-        &__item {
-          display: inline-block;
-          font-size: 22px;
-        }
-        &__for-translate {
-          &:hover {
-            background-color: #534d53;
-            color: white;
-            cursor: pointer;
-          }
-        }
-      }
+    width: 100%;
+    &__container {
+      position: relative;
+      width: 800px;
     }
   }
 }

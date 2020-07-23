@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedModule } from '../shared/shared.module';
+import { SubtitlesComponent } from './components/subtitles/subtitles.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { SharedModule } from '../shared/shared.module';
     AddFlashcardComponent,
     VideosComponent,
     VideoComponent,
-    UnsubscribeComponent
+    UnsubscribeComponent,
+    SubtitlesComponent
   ],
   imports: [
     CommonModule,
