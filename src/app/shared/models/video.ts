@@ -4,7 +4,7 @@ export class Video {
     public name: string,
     public type: VideoType,
     public seasons: Season[],
-    public showSeasons?: boolean,
+    public image: string
   ) {
   }
 }

@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedModule } from '../shared/shared.module';
 import { SubtitlesComponent } from './components/subtitles/subtitles.component';
+import { SeasonsComponent } from './components/seasons/seasons.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { SubtitlesComponent } from './components/subtitles/subtitles.component';
     VideosComponent,
     VideoComponent,
     UnsubscribeComponent,
-    SubtitlesComponent
+    SubtitlesComponent,
+    SeasonsComponent
   ],
   imports: [
     CommonModule,

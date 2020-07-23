@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { VideoService } from '../../../shared/services/video.service';
-import {Season, Video} from '../../../shared/models/video';
+import { Video } from '../../../shared/models/video';
 import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
 
 @Component({
@@ -29,13 +29,5 @@ export class VideosComponent extends UnsubscribeComponent implements OnInit {
       });
 
     this.subscriptions.push(getVideoSubscription);
-  }
-
-  showSeason(video: Video) {
-    video.showSeasons = !video.showSeasons;
-  }
-
-  showEpisodes(season: Season) {
-    season.showEpisodes = !season.showEpisodes;
   }
 }

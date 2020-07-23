@@ -209,6 +209,7 @@
       "id": "1",
       "name": "Gilmore Girls",
       "type": "serial",
+      "image": "Gilmore_Girls.jpg",
       "seasons": [
         {
           "id": "1",
@@ -236,6 +237,7 @@
       "id": "2",
       "name": "Friends",
       "type": "serial",
+      "image": "Friends.jpg",
       "seasons": [
         {
           "id": "1",

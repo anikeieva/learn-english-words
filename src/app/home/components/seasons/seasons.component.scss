@@ -1,0 +1,29 @@
+.seasons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  &__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &__title {
+    text-align: center;
+    margin: 10px 0;
+  }
+  &__content {
+    text-align: center;
+    .season {
+      &__item {
+        cursor: pointer;
+      }
+      .episode {
+        &__text {
+          text-decoration: none;
+          color: black;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<div class="seasons"
+     *ngIf="isVideoGet">
+  <div class="seasons__header">
+    <img alt=""
+         src="assets/images/{{video.image}}"
+         class="seasons__image">
+
+    <h2 class="seasons__title">
+      {{video.name}}
+    </h2>
+  </div>
+
+  <ul *ngIf="video.seasons"
+      class="seasons__content">
+
+    <li *ngFor="let season of video.seasons"
+        class="season">
+
+      <h3 class="season__item"
+          (click)="showEpisodes(season)">
+        Season {{season.seasonNumber}}
+      </h3>
+
+      <ul *ngIf="season.showEpisodes">
+        <li *ngFor="let episode of season.episodesList"
+            class="episode">
+
+          <a [routerLink]="['/videos', video.id, season.id, episode.id]"
+             class="episode__text">
+            Episode {{episode.episodeNumber}}
+          </a>
+
+        </li>
+      </ul>
+
+    </li>
+  </ul>
+</div>

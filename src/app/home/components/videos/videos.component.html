@@ -1,33 +1,20 @@
 <div class="videos">
 
   <ul>
+
     <li *ngFor="let video of videos"
         class="video">
-      <h2 class="video__item"
-          (click)="showSeason(video)">
-        {{video.name}}
-      </h2>
 
-      <ul *ngIf="video.seasons && video.showSeasons">
-        <li *ngFor="let season of video.seasons"
-            class="season">
-          <h3 class="season__item"
-              (click)="showEpisodes(season)">
-            Season {{season.seasonNumber}}
-          </h3>
+      <div class="video__about-container"
+           [routerLink]="['/videos', video.id]">
+        <img alt=""
+             src="assets/images/{{video.image}}"
+            class="video__image">
 
-          <ul *ngIf="season.showEpisodes">
-            <li *ngFor="let episode of season.episodesList"
-                class="episode">
-              <a [routerLink]="['/videos', video.id, season.id, episode.id]"
-                  class="episode-text">
-                Episode {{episode.episodeNumber}}
-              </a>
-            </li>
-          </ul>
-
-        </li>
-      </ul>
+        <h2 class="video__title">
+          {{video.name}}
+        </h2>
+      </div>
 
     </li>
   </ul>
