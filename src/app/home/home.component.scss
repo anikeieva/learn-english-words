@@ -12,14 +12,26 @@
     &-item {
       display: inline-block;
       padding: 8px 15px;
-      color: white;
-      background-color: #808080bf;
-      border-radius: 2px;
       margin-right: 3px;
       font-size: 15px;
+      color: #6b6363;
+      border: 1px solid #6b6363;
+      border-radius: 2px;
       cursor: pointer;
-      &:hover, &.active {
-        background-color: #787878;
+      &.active {
+        background-color: #4d4f4d;
+        border-color: #4d4f4d;
+        color: white;
+        &:hover {
+          background-color: #4d4f4deb;
+          border-color: #4d4f4deb;
+          color: white;
+        }
+      }
+      &:hover {
+        background-color: #4d4f4d85;
+        border-color: #4d4f4d85;
+        color: white;
       }
       &:focus, &:active {
         outline: none;

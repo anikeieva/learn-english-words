@@ -1,0 +1,17 @@
+.video {
+  &__about-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: white;
+    margin-bottom: 5px;
+    border: 1px solid #cfd6d68f;
+  }
+  &__image {
+    height: 150px;
+  }
+  &__title {
+    margin-left: 20px;
+  }
+}
