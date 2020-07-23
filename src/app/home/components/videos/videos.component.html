@@ -1,11 +1,35 @@
-<div>
-  <h2>Gilmore Girls (Season 5)</h2>
-
-  <p>Watch episodes</p>
+<div class="videos">
 
   <ul>
-    <li *ngFor="let video of videos">
-      <a [routerLink]="['/videos', video.id]">Episode {{video.episode}}</a>
+    <li *ngFor="let video of videos"
+        class="video">
+      <h2 class="video__item"
+          (click)="showSeason(video)">
+        {{video.name}}
+      </h2>
+
+      <ul *ngIf="video.seasons && video.showSeasons">
+        <li *ngFor="let season of video.seasons"
+            class="season">
+          <h3 class="season__item"
+              (click)="showEpisodes(season)">
+            Season {{season.seasonNumber}}
+          </h3>
+
+          <ul *ngIf="season.showEpisodes">
+            <li *ngFor="let episode of season.episodesList"
+                class="episode">
+              <a [routerLink]="['/videos', video.id, season.id, episode.id]"
+                  class="episode-text">
+                Episode {{episode.episodeNumber}}
+              </a>
+            </li>
+          </ul>
+
+        </li>
+      </ul>
+
     </li>
   </ul>
+
 </div>

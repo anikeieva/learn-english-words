@@ -3,7 +3,7 @@ import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 import { VideoService } from '../../../shared/services/video.service';
-import { Video } from '../../../shared/models/video';
+import {Episode, Season, Video} from '../../../shared/models/video';
 import { SubtitleWord, WordList } from '../../../shared/models/subtitleWord';
 import { Flashcard } from '../../../shared/models/Flashcard';
 import { MatDialog } from '@angular/material';
@@ -26,11 +26,15 @@ import {Const} from '../../../shared/data/const';
   styleUrls: ['./video.component.scss']
 })
 export class VideoComponent extends UnsubscribeComponent implements OnInit {
-  video: Video;
+  video: Episode;
   subtitlesList: SubtitleWord[] = [];
   secondSubtitlesList: SubtitleWord[] = [];
   isVideoGet = false;
   subscriptions: Subscription[] = [];
+
+  private episodeId: string;
+  private seasonId: string;
+  private videoId: string;
 
   constructor(
     private videoService: VideoService,
@@ -45,14 +49,20 @@ export class VideoComponent extends UnsubscribeComponent implements OnInit {
     this.subscriptions.push(
       this.route.paramMap.pipe(
         switchMap((params) => {
-          if (params && params.get('id')) {
-            const id: number = Number(params.get('id'));
+          if (params && params.get('episodeId')) {
+            this.videoId = params.get('videoId');
+            this.seasonId = params.get('seasonId');
+            this.episodeId = params.get('episodeId');
 
-            return this.videoService.getVideo(id);
+            return this.videoService.getVideo(this.videoId);
           }
         })
       ).subscribe((video: Video) => {
-        this.video = video;
+        console.log(video);
+        // TODO: for refactoring getting particular video from server
+        const season: Season = video.seasons
+          .find((seasonItem: Season) => seasonItem.id === this.seasonId);
+        this.video = season.episodesList.find(episode => episode.id === this.episodeId);
         this.isVideoGet = true;
 
         if (this.video) {

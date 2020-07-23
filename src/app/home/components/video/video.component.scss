@@ -5,10 +5,16 @@
   }
   .subtitles-content {
     position: absolute;
-    top: 20px;
-    left: 0;
     width: 800px;
     color: white;
+    &.first-subtitles {
+      top: 20px;
+      left: 0;
+    }
+    &.second-subtitles {
+      top: 360px;
+      left: 0;
+    }
     .subtitle {
       text-align: center;
       display: none;

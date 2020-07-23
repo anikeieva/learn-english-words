@@ -11,7 +11,7 @@ const routes: Routes = [
     { path: '', redirectTo: 'flashcards', pathMatch: 'full' },
     { path: 'flashcards', component: FlashcardsComponent },
     { path: 'videos', component: VideosComponent },
-    { path: 'videos/:id', component: VideoComponent }
+    { path: 'videos/:videoId/:seasonId/:episodeId', component: VideoComponent }
   ] },
 ];
 

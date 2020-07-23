@@ -6,7 +6,7 @@
             type="video/mp4">
   </video>
 
-  <div class="subtitles-content">
+  <div class="subtitles-content first-subtitles">
     <ul>
       <li *ngFor="let subtitle of subtitlesList"
           class="subtitle"
@@ -31,12 +31,27 @@
     </ul>
   </div>
 
-<!--  <div class="subtitles-content">-->
-<!--    <ul>-->
-<!--      <li *ngFor="let line of secondSubtitlesList"-->
-<!--          [ngClass]="{'active': line.active}">-->
-<!--        {{ line.text }}-->
-<!--      </li>-->
-<!--    </ul>-->
-<!--  </div>-->
+  <div class="subtitles-content second-subtitles">
+    <ul>
+      <li *ngFor="let subtitle of secondSubtitlesList"
+          class="subtitle"
+          [ngClass]="{'active': subtitle.active}">
+        <ul *ngFor="let subtitleItem of subtitle.wordList"
+            class="subtitle__item">
+          <li *ngFor="let wordListLine of subtitleItem"
+              class="word-list-line">
+            <ul class="word">
+              <li class="word__item">
+                {{wordListLine.wordForTranslate}}
+              </li>
+              <li *ngIf="wordListLine.restText"
+                  class="word__item">
+                {{wordListLine.restText}}
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </div>

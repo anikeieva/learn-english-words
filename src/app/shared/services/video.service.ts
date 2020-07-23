@@ -19,7 +19,7 @@ export class VideoService extends BaseApiService {
     return this.get('videos');
   }
 
-  getVideo(id: number = 1): Observable<Video> {
+  getVideo(id: string = '1'): Observable<Video> {
       return this.get('videos', {
         params: new HttpParams().set('id', id.toString())
       }).pipe(
