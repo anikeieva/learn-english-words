@@ -6,6 +6,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+  }
+  &__image {
+    width: 700px;
   }
   &__title {
     text-align: center;
