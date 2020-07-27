@@ -14,8 +14,9 @@ import { Subscription } from 'rxjs';
 export class SeasonsComponent extends UnsubscribeComponent implements OnInit {
   video: Video;
   subscriptions: Subscription[] = [];
+  isVideoGet = false;
+
   private videoId: string;
-  private isVideoGet = false;
 
   constructor(
     private videoService: VideoService,

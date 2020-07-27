@@ -18,9 +18,25 @@ import { MatButtonModule } from '@angular/material/button';
 import { SharedModule } from '../shared/shared.module';
 import { SubtitlesComponent } from './components/subtitles/subtitles.component';
 import { SeasonsComponent } from './components/seasons/seasons.component';
+import { BaseApiService } from '../shared/services/base-api.service';
+import { FlashcardsService } from '../shared/services/flashcards.service';
+import { VideoService } from '../shared/services/video.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
+  imports: [
+    CommonModule,
+    HomeRoutingModule,
+    MatCardModule,
+    MatIconModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    SharedModule,
+    HttpClientModule
+  ],
   declarations: [
     FlashcardComponent,
     FlashcardsComponent,
@@ -32,16 +48,10 @@ import { SeasonsComponent } from './components/seasons/seasons.component';
     SubtitlesComponent,
     SeasonsComponent
   ],
-  imports: [
-    CommonModule,
-    HomeRoutingModule,
-    MatCardModule,
-    MatIconModule,
-    MatDialogModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    SharedModule
+  providers: [
+    BaseApiService,
+    FlashcardsService,
+    VideoService
   ]
 })
 export class HomeModule { }

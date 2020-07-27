@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "learn-english-words"
+    }
+  },
+  "defaultProject": "learn-english-words",
+  "cli": {
+    "analytics": "1b2f389a-2e8b-4962-83d0-0128e1f0a4d8"
+  }
 }

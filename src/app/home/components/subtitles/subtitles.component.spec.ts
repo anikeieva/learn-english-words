@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubtitlesComponent } from './subtitles.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {FlashcardsService} from '../../../shared/services/flashcards.service';
 
 describe('SubtitlesComponent', () => {
   let component: SubtitlesComponent;
@@ -8,7 +11,9 @@ describe('SubtitlesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubtitlesComponent ]
+      declarations: [ SubtitlesComponent ],
+      providers: [ FlashcardsService ],
+      imports: [ MatDialogModule, HttpClientTestingModule ]
     })
     .compileComponents();
   }));
