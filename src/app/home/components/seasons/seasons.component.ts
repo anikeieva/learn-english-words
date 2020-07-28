@@ -3,7 +3,7 @@ import { switchMap } from 'rxjs/operators';
 import { Season, Video } from '../../../shared/models/video';
 import { VideoService } from '../../../shared/services/video.service';
 import { ActivatedRoute } from '@angular/router';
-import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
+import { UnsubscribeComponent } from '../unsubscriber/unsubscribe.component';
 import { Subscription } from 'rxjs';
 
 @Component({

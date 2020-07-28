@@ -5,7 +5,7 @@ import { AddFlashcardComponent } from '../add-flashcard/add-flashcard.component'
 import { Flashcard } from '../../../shared/models/Flashcard';
 import { MatDialog } from '@angular/material';
 import { FlashcardsService } from '../../../shared/services/flashcards.service';
-import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
+import { UnsubscribeComponent } from '../unsubscriber/unsubscribe.component';
 import { Subscription } from 'rxjs';
 
 @Component({

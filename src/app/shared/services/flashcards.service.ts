@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 import { Flashcard } from '../models/Flashcard';
-import {BaseApiService} from './base-api.service';
+import { BaseApiService } from './base-api.service';
 
 @Injectable({
   providedIn: 'root'

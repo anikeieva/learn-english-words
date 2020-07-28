@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { VideoService } from '../../../shared/services/video.service';
 import { Video } from '../../../shared/models/video';
-import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
+import { UnsubscribeComponent } from '../unsubscriber/unsubscribe.component';
 
 @Component({
   selector: 'app-videos',

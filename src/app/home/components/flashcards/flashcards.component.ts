@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material';
 import { Flashcard } from '../../../shared/models/Flashcard';
 import { FlashcardsService } from '../../../shared/services/flashcards.service';
 import { AddFlashcardComponent } from '../add-flashcard/add-flashcard.component';
-import {UnsubscribeComponent} from '../../../shared/components/unsubscriber/unsubscribe.component';
-import {Subscription} from 'rxjs';
+import { UnsubscribeComponent } from '../unsubscriber/unsubscribe.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-flashcards',

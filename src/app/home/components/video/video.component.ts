@@ -7,7 +7,7 @@ import { Episode, Season, Video } from '../../../shared/models/video';
 import { SubtitleWord, WordList } from '../../../shared/models/subtitleWord';
 import { FlashcardsService } from '../../../shared/services/flashcards.service';
 import { Subscription } from 'rxjs';
-import { UnsubscribeComponent } from '../../../shared/components/unsubscriber/unsubscribe.component';
+import { UnsubscribeComponent } from '../unsubscriber/unsubscribe.component';
 import {
   lineFeedRegExp,
   parseSubtitleTimeRegExp,
@@ -15,7 +15,7 @@ import {
   subtitleTimeCodeRexExp,
   textStartedWithNumberRegExp
 } from '../../../shared/data/regularExpressions';
-import {Const} from '../../../shared/data/const';
+import { Const } from '../../../shared/data/const';
 
 @Component({
   selector: 'app-video',

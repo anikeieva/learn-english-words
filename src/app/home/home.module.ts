@@ -8,7 +8,7 @@ import { GetTextPipe } from '../shared/pipes/get-text.pipe';
 import { AddFlashcardComponent } from './components/add-flashcard/add-flashcard.component';
 import { VideosComponent } from './components/videos/videos.component';
 import { VideoComponent } from './components/video/video.component';
-import { UnsubscribeComponent } from '../shared/components/unsubscriber/unsubscribe.component';
+import { UnsubscribeComponent } from './components/unsubscriber/unsubscribe.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -21,7 +21,9 @@ import { SeasonsComponent } from './components/seasons/seasons.component';
 import { BaseApiService } from '../shared/services/base-api.service';
 import { FlashcardsService } from '../shared/services/flashcards.service';
 import { VideoService } from '../shared/services/video.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { NotificationInterceptor } from '../shared/services/notification.interceptor';
+import { MatSnackBarModule } from '@angular/material';
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     MatButtonModule,
     SharedModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSnackBarModule
   ],
   declarations: [
     FlashcardComponent,
@@ -51,7 +54,12 @@ import { HttpClientModule } from '@angular/common/http';
   providers: [
     BaseApiService,
     FlashcardsService,
-    VideoService
+    VideoService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: NotificationInterceptor,
+      multi: true
+    }
   ]
 })
 export class HomeModule { }
